@@ -96,18 +96,24 @@ def handTrack():
     pTime = 0
     while True:
         success, img=cap.read()
+        img = cv2.flip(img, 1)
         imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         results = hands.process(imgRGB)
         # print(results.multi_hand_landmarks)
         if results.multi_hand_landmarks:
             for handLms in results.multi_hand_landmarks:
                 for id,lm in enumerate(handLms.landmark):
-                    print(id,lm )
+                    print(id,lm)
                     h,w,c=img.shape
                     cx,cy = int(lm.x*w),int(lm.y*h)
                     print(id,cx,cy)
-                    # if id == 0:
-                    #     cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
+                    if id == 8:
+                        cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
+                    if id == 12:
+                        cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
+                    if id == 4:
+                        cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
+
                     
 
                 mpDraw.draw_landmarks(img,handLms,mpHands.HAND_CONNECTIONS)
@@ -120,3 +126,4 @@ def handTrack():
         cv2.imshow("img",img)
         cv2.waitKey(1)
 handTrack()
+   
