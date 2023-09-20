@@ -34,10 +34,7 @@ def handTrack():
         imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         results = hands.process(imgRGB)
         # print(results.multi_hand_landmarks)
-        output = hands.process(imgRGB)
-        landmark_points = output.multi_hand_landmarks
         if results.multi_hand_landmarks:
-            landmarks = landmark_points[0].landmark
             for handLms in results.multi_hand_landmarks:
                 for id,lm in enumerate(handLms.landmark):
                     plocX, plocY = 0, 0
@@ -99,12 +96,12 @@ def handTrack():
                         pyautogui.click(button='right')
                         pyautogui.sleep(1.5)
 
-                scroll_up = [landmarks[5], landmarks[8]]
+                scroll_up = [lmList[5], lmList[8]]
                 for landmark in scroll_up:
-                    x3 = int(landmark.x *w)
-                    y3 = int(landmark.y *h)
+                    x3 = int(landmark[1] *w)
+                    y3 = int(landmark[2] *h)
                     cv2.circle(img, (x3, y3), 3, (255, 0, 255))
-                if (scroll_up[0].y - scroll_up[1].y) < 0.03:
+                if (scroll_up[0][2] - scroll_up[2]) < 0.03:
                     pyautogui.scroll(500)
                     pyautogui.sleep(1.0)
 
@@ -124,4 +121,4 @@ def handTrack():
         cv2.imshow("img",img)
         cv2.waitKey(1)
 handTrack()
-   
+    
