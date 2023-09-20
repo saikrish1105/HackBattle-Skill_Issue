@@ -101,7 +101,7 @@ def handTrack():
                     x3 = int(landmark[1] *w)
                     y3 = int(landmark[2] *h)
                     cv2.circle(img, (x3, y3), 3, (255, 0, 255))
-                if (scroll_up[0][2] - scroll_up[2]) < 0.03:
+                if (scroll_up[0][2] - scroll_up[1][2]) < 0.03:
                     pyautogui.scroll(500)
                     pyautogui.sleep(1.0)
 
