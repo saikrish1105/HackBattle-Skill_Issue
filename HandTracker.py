@@ -8,114 +8,83 @@ import cv2
 import numpy as np
 import time
 pyautogui.FAILSAFE=False
-def eyeTrack():
-    cam = cv2.VideoCapture(0)
-    face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
-    screen_w, screen_h = pyautogui.size()
-    frame_r = 200
-    pTime = 0
-    plocX, plocY = 0, 0
-    clocX, clocY = 0, 0
-    smoothening = 1
-    def fps():
-        global pTime
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime
-        cv2.putText(frame, str(int(fps)), (20, 50), cv2.FONT_HERSHEY_PLAIN, 3,
-        (255, 0, 0), 3)
-    while True:
-        _, frame = cam.read()
-        frame = cv2.flip(frame, 1)
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        output = face_mesh.process(rgb_frame)
-        landmark_points = output.multi_face_landmarks
-        frame_h, frame_w, _ = frame.shape
-        cv2.rectangle(frame, (frame_r, frame_r), (frame_w -frame_r, frame_h - frame_r), (255,0,0), 2)
-        if landmark_points:
-            landmarks = landmark_points[0].landmark
-            for id, landmark in enumerate(landmarks[474:478]):
-                x = int(landmark.x * frame_w)
-                y = int(landmark.y * frame_h)
-                #print(x,y)
-                cv2.circle(frame, (x, y), 3, (0, 255, 0))
-                if id == 1:
-                    screen_x = np.interp(x,(frame_r, frame_w-frame_r),(0,screen_w))
-                    screen_y = np.interp(y,(frame_r, frame_h-frame_r),(0,screen_h))
-                    '''
-                    screen_x = screen_w * landmark.x
-                    screen_y = screen_h * landmark.y'''
-                    clocX = plocX + (screen_x - plocX) / smoothening
-                    clocY = plocY + (screen_y - plocY) / smoothening
-                    pyautogui.moveTo(clocX, clocY)
-                    plocX, plocY = clocX, clocY
-            left = [landmarks[145], landmarks[159]]
-            for landmark in left:
-                x = int(landmark.x * frame_w)
-                y = int(landmark.y * frame_h)
-                cv2.circle(frame, (x, y), 3, (0, 255, 255))
-            if (left[0].y - left[1].y) < 0.009:
-                pyautogui.click() 
-                pyautogui.sleep(1)
-            right = [landmarks[374], landmarks[386]]
-            for landmark in right:
-                x2 = int(landmark.x * frame_w)
-                y2 = int(landmark.y * frame_h)
-                cv2.circle(frame, (x2, y2), 3, (0, 255, 255))
-            # print(right[0].y - right[1].y)
-            if (right[0].y - right[1].y) < 0.003:
-                
-                pyautogui.click(button='right')
-                pyautogui.sleep(0.5)
-            scroll_up = [landmarks[348], landmarks[443]]
-            for landmark in scroll_up:
-                x3 = int(landmark.x * frame_w)
-                y3 = int(landmark.y * frame_h)
-                cv2.circle(frame, (x3, y3), 3, (255, 0, 255))
-                #print(scroll_up[0].y - scroll_up[1].y)
-            if (scroll_up[0].y - scroll_up[1].y) > 0.08:
-                pyautogui.scroll(500)
-                pyautogui.sleep(1.0)
-        cv2.imshow('Eye Controlled Mouse', frame)
-        cv2.waitKey(1) 
-            
-        fps()
-        cv2.imshow('Eye Controlled Mouse', frame)
-        cv2.waitKey(1)
-    
 def handTrack():
     import cv2
     import mediapipe as mp
     import time
-
+    import pyautogui
+    import math
     cap = cv2.VideoCapture(0)
     mpHands = mp.solutions.hands
     hands = mpHands.Hands()
     mpDraw = mp.solutions.drawing_utils
     cTime = 0
     pTime = 0
+    frameR=0
+    wScr, hScr = pyautogui.size()
+    lmList=[]
+    xlist=[]
+    ylist=[]
+    bbox=[]
+    tipIds = [4, 8, 12, 16, 20]
     while True:
         success, img=cap.read()
         img = cv2.flip(img, 1)
+        wCam,hCam = 500,300
         imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         results = hands.process(imgRGB)
         # print(results.multi_hand_landmarks)
         if results.multi_hand_landmarks:
             for handLms in results.multi_hand_landmarks:
                 for id,lm in enumerate(handLms.landmark):
-                    print(id,lm)
+                    plocX, plocY = 0, 0
+                    clocX, clocY = 0, 0
+                    smoothening=1
+                    #print(id,lm)
                     h,w,c=img.shape
                     cx,cy = int(lm.x*w),int(lm.y*h)
-                    print(id,cx,cy)
-                    if id == 8:
-                        cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
-                    if id == 12:
-                        cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
-                    if id == 4:
-                        cv2.circle(img,(cx,cy),15,(255,67,45),cv2.FILLED)
+                    xlist.append(cx)
+                    ylist.append(cy)
+                    lmList.append([id,cx,cy])
+                bbox=min(xlist),min(ylist),max(xlist),max(ylist)
+                if len(lmList) != 0:
+                    x1, y1 = lmList[8][1:]
+                    x2, y2 = lmList[12][1:]
 
-                    
-
+                fingers=[]
+                for id in range(1,5):
+                    if lmList[tipIds[id]][2] < lmList[tipIds[id] - 2][2]:
+                        fingers.append(1)
+                    else:
+                        fingers.append(0)
+                cv2.rectangle(img, (frameR, frameR), (wCam, hCam),(255, 0, 255), 2)
+                if fingers[0]==1 and fingers[1]==0:
+                        x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
+                        y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr))
+                        clocX = plocX + (x3 - plocX) / smoothening
+                        clocY = plocY + (y3 - plocY) / smoothening
+                        pyautogui.moveTo(clocX, clocY)
+                        cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+                        plocX, plocY = clocX, clocY
+                if fingers[0]==1 and fingers[1]==1:
+                    x1,y1=lmList[8][1:]
+                    x2,y2=lmList[12][1:]
+                    cx,cy=(x1+x2)//2,(y1+y2)//2
+                    cv2.line(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+                    cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+                    cv2.circle(img, (x2, y2), 15, (255, 0, 255), cv2.FILLED)
+                    cv2.circle(img, (cx, cy), 15, (0, 0, 255), cv2.FILLED)
+                    length = math.hypot(x2 - x1, y2 - y1)
+                    lineInfo=[x1,y1,x2,y2,cx,cy]
+                    if length<40:
+                        cv2.circle(img, (lineInfo[4], lineInfo[5]),15, (0, 255, 0), cv2.FILLED)
+                        pyautogui.click()
+                fingers=[]
+                lmList=[]
+                xlist=[]
+                ylist=[]
+                plocX, plocY = 0, 0
+                clocX, clocY = 0, 0
                 mpDraw.draw_landmarks(img,handLms,mpHands.HAND_CONNECTIONS)
 
         cTime = time.time()
