@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skill Issue{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@200&family=Poppins:wght@100&display=swap');
+
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Handjet";
+    background: black;
+    color: white;
+
+}
+
+p {
+    font-size:20px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 2.1em;
+    width: 100%;
+    display: flex;
+    padding: 20px 100px;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 99;
+}
+{% block style %}{% endblock %}
+
+
+.navigation a {
+    position: relative;
+    font-size: 1.1em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+.navigation a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background: #fff;
+    border-radius: 5px;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .5s;
+}
+.navigation a:hover::after {
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
+</style>
+<body>
+    <header>
+        <h2 class="logo">Skill Issue</h2>
+        <nav class="navigation">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="https://github.com/saikrish1105/HackBattle-Skill_Issue" target="_blank">Source Code</a>
+            <a href="/demo_eye">Eye Tracker Demo</a>
+            <a href="/demo_hand">Hand Tracker Demo</a>
+            <a href="/lorem" class="sans">Lorem</a>
+        </nav>
+
+    </header>
+    <p></p>
+
+    {% block body %}{% endblock %}
+</body>
+</html>

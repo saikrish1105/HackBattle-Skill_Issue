@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+: About Us
+{% endblock %}
+
+{% block style %}
+/* Set additional styling options for the columns */
+.binborder {
+  position: absolute;
+  top: 100px;
+  padding: 0px;
+  width: 100%;
+  letter-spacing: 7px
+}
+p {
+  font-size:40px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px;
+}
+h1 {
+  padding-top: 0px;
+}
+
+{% endblock %}
+
+{% block body %}
+<div class="binborder">
+
+    <p style="text-align: center; font-size:20px;padding: 0px">01010011 01101011 01101001 01101100 01101100 00100000 01001001 01110011 01110011 01110101 01100101</p>
+
+</div>
+<div style="">
+  <h1 style="font-size:60px;padding-bottom:40px;"><center>Welcome to Skill Issue</center></h1>
+  <p>We are a non-profit organisation that works towards helping the paralysed and specially abled people in using electronic devices. Currently our works are proof of concepts, however, on scaling this can lead to improvement of many lives.</p>
+  <p>Currently we have developed two types of gesture monitoring namely the eye-tracking and hand gesture tracking to move the cursor and interact with it.</p>
+  <p></p>
+</div>
+{% endblock %}

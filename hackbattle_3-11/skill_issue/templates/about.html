@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}
+: About Us
+{% endblock %}
+
+{% block style %}
+/* Set additional styling options for the columns */
+.column {
+    float: center;
+    width: 500px;
+    padding: 50px; /* Adjust padding as desired */
+    text-align: center;
+}
+
+.center {
+    clear: both;
+    text-align: center;
+    padding: 50px; /* Adjust padding as desired */
+}
+
+.ppt{
+    clear: both;
+    position:absolute;
+    bottom:0;
+    text-align:center;
+    align:center;
+    justify-content:center;
+}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <!-- First row with 2 divs -->
+    <div class="column">
+        <h1><br><br> Ishan Tare</h1>
+        <img src="{{url_for('static', filename='ishan.jpg')}}" alt="HTML5 Icon" width="250" height="250">
+        <p>Airdropped here by mistake</p>
+        <p>Expert in confusing others</p>
+
+    </div>
+    <div class="column">
+        <h1>Aronnya (Reaper) Pal</h1>
+        <img src="{{url_for('static', filename='aronnya.jpg')}}" alt="HTML5 Icon" width="250" height="250">
+        <p>Drip Master</p>
+        <p>Resident Genius</p>
+    </div>
+</div>
+
+<div class="center">
+    <!-- Second row with 1 div -->
+    <div class="column">
+        <h1>Sai Krish Naidu</h1>
+        <img src="{{url_for('static', filename='krish.jpg')}}" alt="HTML5 Icon" width="250" height="250">
+        <p>Leader</p>
+        <p>Knows neural networks and can make AI/ML models</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Third row with 2 divs -->
+    <div class="column">
+        <h1><br><br>Sujatro Ganguli</h1>
+        <img src="{{url_for('static', filename='sujatro.jpg')}}" alt="HTML5 Icon" width="250" height="250">
+        <p>Made this website</p>
+        <p>Jack of all trades Master of none</p>
+    </div>
+    <div class="column">
+        <h1>Prateek Batra</h1>
+        <img src="{{url_for('static', filename='prateek.jpg')}}" alt="HTML5 Icon" width="250" height="250">
+        <p>Designer of absolutely nothing</p>
+        <p>Creative in finding ways to get ODs</p>
+    </div>
+</div>
+
+
+<div class="ppt">
+        <nav class="navigation" style="font-size:4em;"><a href="https://docs.google.com/presentation/d/1tO8Ti_lwM73kK_cmOkc2eWLpW6-MpXDC/edit?usp=sharing&ouid=106258371178406957076&rtpof=true&sd=true" target="_blank">PPT</a><a href="#"></a></nav>
+</div>
+
+
+{% endblock %}
