@@ -101,7 +101,7 @@ def handTrack():
                     x3 = int(landmark[1] *w)
                     y3 = int(landmark[2] *h)
                     cv2.circle(img, (x3, y3), 3, (255, 0, 255))
-                if abs((scroll_up[0][2] - scroll_up[1][2])) < 0.06:
+                if abs((scroll_up[0][2] - scroll_up[1][2])) < 3:
                     pyautogui.scroll(500)
                     pyautogui.sleep(1.0)
                 scroll_down = [lmList[9], lmList[12]]
@@ -109,7 +109,7 @@ def handTrack():
                     x4 = int(landmark[1] *w)
                     y4 = int(landmark[2] *h)
                     cv2.circle(img, (x4, y4), 3, (255, 0, 255))
-                if abs((scroll_down[0][2] - scroll_down[1][2])) < 0.06:
+                if abs((scroll_down[0][2] - scroll_down[1][2])) < 3:
                     pyautogui.scroll(-500)
                     pyautogui.sleep(1.0)
 
@@ -129,4 +129,3 @@ def handTrack():
         cv2.imshow("img",img)
         cv2.waitKey(1)
 handTrack()
-    
