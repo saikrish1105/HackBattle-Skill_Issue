@@ -34,7 +34,10 @@ def handTrack():
         imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         results = hands.process(imgRGB)
         # print(results.multi_hand_landmarks)
+        output = hands.process(imgRGB)
+        landmark_points = output.multi_hand_landmarks
         if results.multi_hand_landmarks:
+            landmarks = landmark_points[0].landmark
             for handLms in results.multi_hand_landmarks:
                 for id,lm in enumerate(handLms.landmark):
                     plocX, plocY = 0, 0
@@ -79,6 +82,32 @@ def handTrack():
                     if length<40:
                         cv2.circle(img, (lineInfo[4], lineInfo[5]),15, (0, 255, 0), cv2.FILLED)
                         pyautogui.click()
+                        pyautogui.sleep(1)
+
+                if fingers[0]==1 and fingers[2]==1:
+                    x1,y1=lmList[8][1:]
+                    x2,y2=lmList[16][1:]
+                    cx,cy=(x1+x2)//2,(y1+y2)//2
+                    cv2.line(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+                    cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+                    cv2.circle(img, (x2, y2), 15, (255, 0, 255), cv2.FILLED)
+                    cv2.circle(img, (cx, cy), 15, (0, 0, 255), cv2.FILLED)
+                    length = math.hypot(x2 - x1, y2 - y1)
+                    lineInfo=[x1,y1,x2,y2,cx,cy]
+                    if length<70:
+                        cv2.circle(img, (lineInfo[4], lineInfo[5]),15, (0, 255, 0), cv2.FILLED)
+                        pyautogui.click(button='right')
+                        pyautogui.sleep(1.5)
+
+                scroll_up = [landmarks[5], landmarks[8]]
+                for landmark in scroll_up:
+                    x3 = int(landmark.x *w)
+                    y3 = int(landmark.y *h)
+                    cv2.circle(img, (x3, y3), 3, (255, 0, 255))
+                if (scroll_up[0].y - scroll_up[1].y) < 0.03:
+                    pyautogui.scroll(500)
+                    pyautogui.sleep(1.0)
+
                 fingers=[]
                 lmList=[]
                 xlist=[]
